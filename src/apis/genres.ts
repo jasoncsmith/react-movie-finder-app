@@ -11,7 +11,7 @@ interface ResponseGenres {
 }
 
 export async function getGenres(): Promise<ResponseGenres | null> {
-  const token = window.localStorage.getItem('authToken')
+  const token = window.localStorage.getItem('mf:authToken')
 
   if (!token) {
     return null

@@ -12,7 +12,10 @@
     "tailwind:watch": "npx tailwindcss -i src/styles/tailwind/input.css -o src/styles/tailwind/output.css --watch --minify"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "react": "^18.3.1",
+    "tailwindcss": "^3.3.2",
+    "@tanstack/react-query": "5.52.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
@@ -26,10 +29,8 @@
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.9",
     "globals": "^15.9.0",
-    "lodash": "^4.17.21",
     "react-router-dom": "6.26.1",
     "sass": "^1.77.8",
-    "tailwindcss": "^3.3.2",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"

@@ -1,72 +1,37 @@
-import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+
+import { transformDate, transformDuration } from '../../../../utils'
 import { getMovie, MovieDetail as MovieDetailProps } from '../../../../apis/movies'
+
 import { MovieRating } from '../Movie'
 import Loader from '../../../Loader'
 import NoResults from '../NoResults'
 
 import styles from './index.module.scss'
-
-const NoImage = () => (
-  <div className="text-xl w-full h-full flex justify-center items-center">
-    <p>No Image Available</p>
-  </div>
-)
-
-const pluralize = (str: string) => {
-  const val = +str
-  return val === 1 ? '' : 's'
-}
-
-const transformDuration = (duration: string) => {
-  const parts = duration.replace('PT', '').replace('M', '').split('H')
-  return `${parts[0]} Hour${pluralize(parts[0])} ${parts[1]} Minute${pluralize(parts[1])}`
-}
-
-const transformDate = (dateString: Date) => {
-  const date = new Date(dateString + 'T00:00:00Z')
-  console.log(dateString)
-  return `
-    ${String(date.getUTCMonth() + 1).padStart(2, '0')}/${String(date.getUTCDate()).padStart(
-    2,
-    '0'
-  )}/${date.getUTCFullYear()}`
-}
+import NoImage from '../NoImage'
+import { useQuery } from '@tanstack/react-query'
 
 const MovieDetail = () => {
-  const [isLoading, setIsLoading] = useState(true)
-  const { id } = useParams()
+  const { id: movieId } = useParams()
   const navigate = useNavigate()
 
-  const [movie, setMovie] = useState<MovieDetailProps | null>(null)
+  const { data, isLoading } = useQuery({
+    queryKey: ['movie', movieId],
+    queryFn: () => getMovie(movieId),
+  })
 
-  useEffect(() => {
-    if (!id) {
-      return
-    }
-
-    setIsLoading(true)
-    getMovie(id)
-      .then(movie => setMovie(movie))
-      .catch(() => setMovie(null))
-      .finally(() => setIsLoading(false))
-  }, [id])
+  const movie: MovieDetailProps | null | undefined = data
 
   if (isLoading) return <Loader />
 
   if (!movie)
     return (
-      <>
-        <button
-          type="button"
-          onClick={() => {
-            navigate('/')
-          }}
-        >
+      <div className="componentWrap">
+        <button type="button" onClick={() => navigate('/')}>
           Home
         </button>
         <NoResults>Movie Not Found</NoResults>
-      </>
+      </div>
     )
 
   const { posterUrl, summary, title, rating, ratingValue, datePublished, duration, genres } = movie
@@ -91,7 +56,7 @@ const MovieDetail = () => {
         </div>
 
         <div className={styles.movieDetail__content}>
-          <h2 className="text-4xl font-bold mb-4 pr-[100px]">{title}</h2>
+          <h2 className="text-4xl font-bold mb-4 pr-[150px]">{title}</h2>
           <div>
             {ratingValue !== undefined &&
               Array(10)

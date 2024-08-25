@@ -18,7 +18,7 @@
         overflow: hidden;
 
         @media (min-width: 768px) {
-            max-width: 400px;
+            max-width: 35%;
             max-height: unset;
             flex-direction: row;
         }
@@ -26,6 +26,10 @@
 
     &__content {
         position: relative;
+
+        @media (min-width: 768px) {
+            max-width: 65%;
+        }
     }
 
     @media (min-width: 768px) {

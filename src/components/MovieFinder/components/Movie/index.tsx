@@ -1,11 +1,6 @@
 import { Link } from 'react-router-dom'
 import { MoviePreview, Rating } from '../../../../apis/movies'
-
-const NoImage = () => (
-  <div className="text-xl w-full h-full flex justify-center items-center">
-    <p>No Image Available</p>
-  </div>
-)
+import NoImage from '../NoImage'
 
 export const MovieRating = ({ rating }: { rating: Rating | undefined }) => (
   <p className="text-red-600 p-1 border-solid border-red-600 text-2xl inline-block font-bold absolute right-1 top-1 bg-white min-w-16 text-center">

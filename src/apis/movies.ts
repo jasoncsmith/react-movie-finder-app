@@ -31,7 +31,7 @@ export interface MoviePreview {
 
 export interface MovieDetail extends MoviePreview {
   summary: string
-  duration: string
+  duration: string | undefined
   directors: string[]
   mainActors: string[]
   datePublished: Date
@@ -48,7 +48,7 @@ interface ResponseMoviePreview {
 }
 
 export async function getTotalNumberOfMovies(): Promise<number | null> {
-  const token = window.localStorage.getItem('authToken')
+  const token = window.localStorage.getItem('mf:authToken')
 
   if (!token) {
     return null
@@ -68,15 +68,19 @@ export async function getTotalNumberOfMovies(): Promise<number | null> {
   }
 }
 
-export async function getMovies(
-  searchTerm: string = '',
-  genre: string = '',
-  page: string = '1',
-  limit: number = 6
-): Promise<ResponseMoviePreview | null> {
-  const token = window.localStorage.getItem('authToken')
+export async function getMovies({
+  search = '',
+  genre = '',
+  page = '1',
+}: {
+  search: string
+  genre: string
+  page: string
+}): Promise<ResponseMoviePreview | null> {
+  const token = window.localStorage.getItem('mf:authToken')
+  const limit = 6
 
-  if (genre === '' && searchTerm.trim().length < MIN_CHAR_COUNT) {
+  if (genre === '' && search.trim().length < MIN_CHAR_COUNT) {
     return null
   }
 
@@ -86,7 +90,7 @@ export async function getMovies(
 
   try {
     const response = await fetch(
-      `${BASE_URL}/movies?search=${searchTerm}&genre=${genre}&page=${page}&limit=${limit}`,
+      `${BASE_URL}/movies?search=${search}&genre=${genre}&page=${page}&limit=${limit}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -100,10 +104,10 @@ export async function getMovies(
   }
 }
 
-export async function getMovie(id: string): Promise<MovieDetail | null> {
-  const token = window.localStorage.getItem('authToken')
+export async function getMovie(id: string | undefined): Promise<MovieDetail | null> {
+  const token = window.localStorage.getItem('mf:authToken')
 
-  if (!token) {
+  if (!token || !id) {
     return null
   }
 

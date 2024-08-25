@@ -1,9 +1,10 @@
-import { ChangeEvent, ReactNode, useEffect, useMemo, useState } from 'react'
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { getMovies, getTotalNumberOfMovies, MoviePreview } from '../../apis/movies'
-import { GenreModel, getGenres } from '../../apis/genres'
+import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+
 import { getAuth } from '../../apis/auth'
-import { MIN_CHAR_COUNT } from '../../apis/constants'
+import { useMovieFetcher } from '../../hooks/useMovieFetcher'
+import { pluralize } from '../../utils'
+
 import Results from './components/Results'
 import Pagination from './components/Pagination'
 import Search from './components/Search'
@@ -14,48 +15,26 @@ import styles from './index.module.scss'
 const Controls = ({ children }: { children: ReactNode }) => <div className="grid grid-cols-2">{children}</div>
 
 const MovieFinder = () => {
-  const [movies, setData] = useState<MoviePreview[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [totalPages, setTotalPages] = useState(0)
-  const [totalMovieCount, setTotalMovieCount] = useState(0)
-  const [genres, setGenres] = useState<GenreModel[]>([])
+  const { totalMovieCount, totalPages, movies, allGenres, searchParam, genreParam, searchParams } =
+    useMovieFetcher()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedGenre, setGenre] = useState('')
-  const location = useLocation()
   const [, setSearchParams] = useSearchParams()
+  const token = window.localStorage.getItem('mf:authToken')
 
-  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search])
-  const cachedGenres = useMemo(() => genres, [genres.length])
+  const [selectedGenre, setGenre] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    if (token) return
     setIsLoading(true)
     getAuth().finally(() => setIsLoading(false))
-    getTotalNumberOfMovies().then(count => setTotalMovieCount(count ?? 0))
-    getGenres().then(rsp => setGenres(rsp?.data ?? []))
-  }, [])
+  }, [token])
 
   useEffect(() => {
-    const searchTerm = searchParams.get('search') ?? ''
-    const page = searchParams.get('page') ?? '1'
-    const genre = searchParams.get('genre') ?? ''
-
-    if (genre === '' && searchTerm.trim().length < MIN_CHAR_COUNT) {
-      setData([])
-      setTotalPages(0)
-      return
-    }
-
-    setIsLoading(true)
-    setSearchTerm(searchTerm)
-    setGenre(genre)
-
-    getMovies(searchTerm, genre, page)
-      .then(rsp => {
-        setTotalPages(rsp?.totalPages ?? 0)
-        setData(rsp?.data ?? [])
-      })
-      .finally(() => setIsLoading(false))
-  }, [searchParams])
+    // populate controls on page load if defined in url
+    setSearchTerm(searchParam)
+    setGenre(genreParam)
+  }, [searchParam, genreParam])
 
   function handleSearchChange(e: ChangeEvent<HTMLInputElement>): void {
     const val = e.target.value
@@ -77,9 +56,12 @@ const MovieFinder = () => {
     <div className={styles.movieFinder}>
       <Controls>
         <Search searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
-        <GenreSelector allGenres={cachedGenres} onChange={handleGenreChange} selectedGenre={selectedGenre} />
+        <GenreSelector allGenres={allGenres} onChange={handleGenreChange} selectedGenre={selectedGenre} />
       </Controls>
-      <span> {totalPages > 1 ? `${(totalPages - 1) * 6}+` : `${movies.length}`} MOVIES FOUND</span>
+      <span className="uppercase">
+        {totalPages > 1 ? `${(totalPages - 1) * 6}+` : `${movies.length}`} Movie{pluralize(movies.length)}{' '}
+        Found
+      </span>
       <Pagination totalPages={totalPages} numResults={movies.length} />
       <Results
         searchTerm={searchTerm}
