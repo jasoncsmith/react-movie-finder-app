@@ -1,4 +1,4 @@
-import { BASE_URL, MIN_CHAR_COUNT } from './constants'
+import { BASE_URL, DEFAULT_LIMIT, MIN_CHAR_COUNT } from './constants'
 
 export type Rating =
   | 'G'
@@ -72,13 +72,14 @@ export async function getMovies({
   search = '',
   genre = '',
   page = '1',
+  limit = DEFAULT_LIMIT,
 }: {
   search: string
   genre: string
   page: string
+  limit: number
 }): Promise<ResponseMoviePreview | null> {
   const token = window.localStorage.getItem('mf:authToken')
-  const limit = 6
 
   if (genre === '' && search.trim().length < MIN_CHAR_COUNT) {
     return null

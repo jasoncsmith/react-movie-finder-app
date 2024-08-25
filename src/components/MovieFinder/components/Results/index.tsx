@@ -16,7 +16,7 @@ interface ResultsProps {
 
 const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading }: ResultsProps) => (
   <div className={styles.movieFinder__content}>
-    {searchTerm.length < MIN_CHAR_COUNT && movies.length === 0 && (
+    {!isLoading && searchTerm.length < MIN_CHAR_COUNT && movies.length === 0 && (
       <NoResults>
         <div>
           Search our database of <strong>{totalMovieCount ? totalMovieCount : ''}</strong> movies
@@ -24,7 +24,7 @@ const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading
       </NoResults>
     )}
 
-    {searchTerm.length >= MIN_CHAR_COUNT && movies.length === 0 && (
+    {!isLoading && searchTerm.length >= MIN_CHAR_COUNT && movies.length === 0 && (
       <NoResults>
         No movies found that match <strong>{searchTerm}</strong> {selectedGenre ? `and ${selectedGenre}` : ''}
       </NoResults>

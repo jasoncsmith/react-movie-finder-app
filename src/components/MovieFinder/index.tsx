@@ -14,8 +14,17 @@ import styles from './index.module.scss'
 const Controls = ({ children }: { children: ReactNode }) => <div className="grid grid-cols-2">{children}</div>
 
 const MovieFinder = () => {
-  const { totalMovieCount, totalPages, movies, allGenres, searchParam, genreParam, searchParams, isLoading } =
-    useMovieFetcher()
+  const {
+    totalMovieCount,
+    totalPages,
+    movies,
+    allGenres,
+    searchParam,
+    genreParam,
+    searchParams,
+    estimatedSearchResultCount,
+    isLoading,
+  } = useMovieFetcher()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedGenre, setGenre] = useState('')
   const [, setSearchParams] = useSearchParams()
@@ -42,15 +51,25 @@ const MovieFinder = () => {
     setSearchParams({ genre: val, page: '1', search }, { replace: true })
   }
 
+  /*
+    searchTerm
+    allGenres
+    totalPages
+    movies
+    page
+    limit
+
+   
+   */
+
   return (
     <div className={styles.movieFinder}>
       <Controls>
         <Search searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
         <GenreSelector allGenres={allGenres} onChange={handleGenreChange} selectedGenre={selectedGenre} />
       </Controls>
-      <span className="uppercase">
-        {totalPages > 1 ? `${(totalPages - 1) * 6}+` : `${movies.length}`} Movie{pluralize(movies.length)}{' '}
-        Found
+      <span className={`uppercase ${!movies.length ? 'invisible' : ''}`}>
+        {estimatedSearchResultCount} Movie{pluralize(estimatedSearchResultCount)} Found
       </span>
       <Pagination totalPages={totalPages} numResults={movies.length} />
       <Results

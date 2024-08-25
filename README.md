@@ -12,5 +12,6 @@
 ### Proud of
 
 - The React Query implementation to cache results: it is neat to see the delay when paginating forwards but when paginating backwards through the same result set the rendering is instant.
+- Activated the `keepPreviousData` option to allow for a better UX when paginating
 
-To be continued...
+  To be continued...
