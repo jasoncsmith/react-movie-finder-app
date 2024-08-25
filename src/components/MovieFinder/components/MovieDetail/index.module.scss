@@ -1,0 +1,35 @@
+.componentWrap {
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.movieDetail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 0;
+
+    &__imageContainer {
+        width: 100%;
+        position: relative;
+        max-height: 300px;
+        overflow: hidden;
+
+        @media (min-width: 768px) {
+            max-width: 400px;
+            max-height: unset;
+            flex-direction: row;
+        }
+    }
+
+    &__content {
+        position: relative;
+    }
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 32px;
+    }
+}

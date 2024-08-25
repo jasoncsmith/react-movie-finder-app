@@ -1,0 +1,11 @@
+.movieFinder {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+@media (min-width: 1024px) {
+    .movieFinder {
+        padding: 40px;
+    }
+}
