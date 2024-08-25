@@ -15,7 +15,7 @@ export default function FlexTwoColumn({ children, options = '50/50', className =
   return (
     <div
       className={cn({
-        'flex gap-8 items-center justify-between flex-col md:flex-row': true,
+        'flex gap-4 md:gap-8 items-center justify-between flex-col md:flex-row': true,
         [styles['flexTwoColumn--5050']]: options === '50/50',
         [styles['flexTwoColumn--6040']]: options === '60/40',
         [styles['flexTwoColumn--7030']]: options === '70/30',
