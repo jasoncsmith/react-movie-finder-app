@@ -18,27 +18,33 @@ export const HighlightedText = ({ children }: { children: string | number }) => 
   <strong className="text-orange-400">{children}</strong>
 )
 
-const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading }: ResultsProps) => (
-  <div className={styles.movieFinder__content}>
-    {!isLoading && searchTerm.length < MIN_CHAR_COUNT && movies.length === 0 && (
-      <NoResults>
-        Search our database of <HighlightedText>{totalMovieCount ? totalMovieCount : ''}</HighlightedText>{' '}
-        movies
-      </NoResults>
-    )}
+const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading }: ResultsProps) => {
+  const noResults = !isLoading && movies.length === 0
 
-    {!isLoading && searchTerm.length >= MIN_CHAR_COUNT && movies.length === 0 && (
-      <NoResults>
-        No movies found that match <HighlightedText>{searchTerm}</HighlightedText>{' '}
-        {selectedGenre ? `and have a genre of` : ''}{' '}
-        {selectedGenre && <HighlightedText>{selectedGenre}</HighlightedText>}
-      </NoResults>
-    )}
+  return (
+    <div className={styles.movieFinder__content}>
+      {noResults && searchTerm.length < MIN_CHAR_COUNT && (
+        <NoResults>
+          Search our database of <HighlightedText>{totalMovieCount ? totalMovieCount : ''}</HighlightedText>{' '}
+          movies
+        </NoResults>
+      )}
 
-    {movies.length > 0 && movies.map(movie => <Movie key={movie.id} {...movie} />)}
+      {noResults && searchTerm.length >= MIN_CHAR_COUNT && (
+        <NoResults>
+          No movies found that match <HighlightedText>{searchTerm}</HighlightedText>{' '}
+          {selectedGenre ? `and have a genre of` : ''}{' '}
+          {selectedGenre && <HighlightedText>{selectedGenre}</HighlightedText>}
+        </NoResults>
+      )}
 
-    {isLoading && <Loader />}
-  </div>
-)
+      {movies.map(movie => (
+        <Movie key={movie.id} {...movie} />
+      ))}
+
+      {isLoading && <Loader />}
+    </div>
+  )
+}
 
 export default Results

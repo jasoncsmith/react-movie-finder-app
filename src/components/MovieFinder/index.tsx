@@ -2,15 +2,15 @@ import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMovieFetcher } from '../../hooks/useMovieFetcher'
-import { pluralize } from '../../utils'
 
-import Results, { HighlightedText } from './components/Results'
+import Results from './components/Results'
 import Pagination from './components/Pagination'
 import Search from './components/Search'
 import GenreSelector from './components/GenreSelector'
+import FlexTwoColumn from '../Layout/FlexTwoColumn'
+import NumResultsDisplay from './components/NumResultsDisplay'
 
 import styles from './index.module.scss'
-import FlexTwoColumn from '../Layout/FlexTwoColumn'
 
 const MovieFinder = () => {
   const {
@@ -50,17 +50,6 @@ const MovieFinder = () => {
     setSearchParams({ genre: val, page: '1', search }, { replace: true })
   }
 
-  /*
-    searchTerm
-    allGenres
-    totalPages
-    movies
-    page
-    limit
-
-   
-   */
-
   return (
     <div className={styles.movieFinder}>
       <FlexTwoColumn options="80/20">
@@ -68,10 +57,10 @@ const MovieFinder = () => {
         <GenreSelector allGenres={allGenres} onChange={handleGenreChange} selectedGenre={selectedGenre} />
       </FlexTwoColumn>
       <FlexTwoColumn options="50/50" className={styles.controls}>
-        <span className={`uppercase ${!movies.length ? 'invisible' : ''}`}>
-          <HighlightedText>{estimatedSearchResultCount}</HighlightedText> Movie
-          {pluralize(estimatedSearchResultCount)} Found
-        </span>
+        <NumResultsDisplay
+          numMovies={movies.length}
+          estimatedSearchResultCount={estimatedSearchResultCount}
+        />
         <Pagination totalPages={totalPages} numResults={movies.length} />
       </FlexTwoColumn>
       <Results

@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { transformDate, transformDuration } from '../../../../utils'
 import { useMovieFetcher } from '../../../../hooks/useMovieFetcher'
 
+import { MovieRating } from '../MovieRating'
 import Loader from '../../../Loader'
 import NoResults from '../NoResults'
+import { MovieImage } from '../Movie'
 
-import NoImage from '../NoImage'
 import styles from './index.module.scss'
-import { MovieRating } from '../MovieRating'
 
 const MovieDetail = () => {
   const { id: movieId } = useParams()
@@ -20,7 +20,7 @@ const MovieDetail = () => {
   if (!movie)
     return (
       <div className="componentWrap">
-        <button type="button" onClick={() => navigate('/')}>
+        <button type="button" onClick={() => navigate('/')} title="Return to Home Page">
           Home
         </button>
         <NoResults>Movie Not Found</NoResults>
@@ -36,17 +36,14 @@ const MovieDetail = () => {
         onClick={() => {
           navigate(-1)
         }}
+        title="Back"
       >
         Back
       </button>
 
       <div className={styles.movieDetail}>
         <div className={styles.movieDetail__imageContainer}>
-          {posterUrl ? (
-            <img className="w-full object-contain" src={`${posterUrl}`} alt={title} />
-          ) : (
-            <NoImage />
-          )}
+          <MovieImage url={posterUrl} title={title} />
         </div>
 
         <div className={styles.movieDetail__content}>

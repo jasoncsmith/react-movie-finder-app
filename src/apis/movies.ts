@@ -1,4 +1,4 @@
-import { BASE_URL, DEFAULT_LIMIT, MIN_CHAR_COUNT } from './constants'
+import { BASE_URL, DEFAULT_LIMIT, MIN_CHAR_COUNT, TOKEN_STORAGE_KEY } from './constants'
 
 export type Rating =
   | 'G'
@@ -48,7 +48,7 @@ interface ResponseMoviePreview {
 }
 
 export async function getTotalNumberOfMovies(): Promise<number | null> {
-  const token = window.localStorage.getItem('mf:authToken')
+  const token = window.localStorage.getItem(TOKEN_STORAGE_KEY)
 
   if (!token) {
     return null
@@ -79,7 +79,7 @@ export async function getMovies({
   page: string
   limit: number
 }): Promise<ResponseMoviePreview | null> {
-  const token = window.localStorage.getItem('mf:authToken')
+  const token = window.localStorage.getItem(TOKEN_STORAGE_KEY)
 
   if (genre === '' && search.trim().length < MIN_CHAR_COUNT) {
     return null
@@ -106,7 +106,7 @@ export async function getMovies({
 }
 
 export async function getMovie(id: string | undefined): Promise<MovieDetail | null> {
-  const token = window.localStorage.getItem('mf:authToken')
+  const token = window.localStorage.getItem(TOKEN_STORAGE_KEY)
 
   if (!token || !id) {
     return null

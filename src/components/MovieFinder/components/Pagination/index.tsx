@@ -43,10 +43,10 @@ const Pagination = ({ totalPages }: PaginationProps) => {
         <span>
           PAGE <HighlightedText>{_page}</HighlightedText> of <strong>{totalPages}</strong>
         </span>
-        <button type="button" onClick={previous} disabled={_page === '1'}>
+        <button type="button" onClick={previous} disabled={_page === '1'} title="Previous">
           Previous
         </button>
-        <button type="button" onClick={next} disabled={_page === `${totalPages}`}>
+        <button type="button" onClick={next} disabled={_page === `${totalPages}`} title="Next">
           Next
         </button>
       </div>

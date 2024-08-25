@@ -1,4 +1,4 @@
-import { BASE_URL } from './constants.ts'
+import { BASE_URL, TOKEN_STORAGE_KEY } from './constants.ts'
 
 export interface GenreModel {
   id: string
@@ -11,7 +11,7 @@ interface ResponseGenres {
 }
 
 export async function getGenres(): Promise<ResponseGenres | null> {
-  const token = window.localStorage.getItem('mf:authToken')
+  const token = window.localStorage.getItem(TOKEN_STORAGE_KEY)
 
   if (!token) {
     return null

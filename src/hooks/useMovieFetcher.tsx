@@ -4,11 +4,11 @@ import { useLocation } from 'react-router-dom'
 
 import { getGenres, GenreModel } from '../apis/genres'
 import { getTotalNumberOfMovies, getMovies, MoviePreview, getMovie } from '../apis/movies'
-import { DEFAULT_LIMIT } from '../apis/constants'
+import { DEFAULT_LIMIT, TOKEN_STORAGE_KEY } from '../apis/constants'
 import { getAuth } from '../apis/auth'
 
 export const useMovieFetcher = (movieId?: string) => {
-  const token = window.localStorage.getItem('mf:authToken')
+  const token = window.localStorage.getItem(TOKEN_STORAGE_KEY)
   const [isLoadingToken, setIsLoadingToken] = useState(false)
   const location = useLocation()
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search])
