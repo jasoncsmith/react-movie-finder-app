@@ -9,7 +9,7 @@ interface GenreSelectorProps {
 const GenreSelector = ({ allGenres, onChange, selectedGenre }: GenreSelectorProps) => {
   return (
     <select
-      className="p-4 text-lg border-solid border-white cursor-pointer"
+      className="w-full px-4 py-[18px] text-lg border border-slate-600 border-solid cursor-pointer"
       onChange={onChange}
       value={selectedGenre}
     >

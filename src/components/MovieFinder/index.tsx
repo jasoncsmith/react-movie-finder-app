@@ -1,17 +1,16 @@
-import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { useMovieFetcher } from '../../hooks/useMovieFetcher'
 import { pluralize } from '../../utils'
 
-import Results from './components/Results'
+import Results, { HighlightedText } from './components/Results'
 import Pagination from './components/Pagination'
 import Search from './components/Search'
 import GenreSelector from './components/GenreSelector'
 
 import styles from './index.module.scss'
-
-const Controls = ({ children }: { children: ReactNode }) => <div className="grid grid-cols-2">{children}</div>
+import FlexTwoColumn from '../Layout/FlexTwoColumn'
 
 const MovieFinder = () => {
   const {
@@ -64,14 +63,17 @@ const MovieFinder = () => {
 
   return (
     <div className={styles.movieFinder}>
-      <Controls>
+      <FlexTwoColumn options="80/20">
         <Search searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
         <GenreSelector allGenres={allGenres} onChange={handleGenreChange} selectedGenre={selectedGenre} />
-      </Controls>
-      <span className={`uppercase ${!movies.length ? 'invisible' : ''}`}>
-        {estimatedSearchResultCount} Movie{pluralize(estimatedSearchResultCount)} Found
-      </span>
-      <Pagination totalPages={totalPages} numResults={movies.length} />
+      </FlexTwoColumn>
+      <FlexTwoColumn options="50/50" className={styles.controls}>
+        <span className={`uppercase ${!movies.length ? 'invisible' : ''}`}>
+          <HighlightedText>{estimatedSearchResultCount}</HighlightedText> Movie
+          {pluralize(estimatedSearchResultCount)} Found
+        </span>
+        <Pagination totalPages={totalPages} numResults={movies.length} />
+      </FlexTwoColumn>
       <Results
         searchTerm={searchTerm}
         selectedGenre={selectedGenre}

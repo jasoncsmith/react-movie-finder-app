@@ -3,12 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { transformDate, transformDuration } from '../../../../utils'
 import { useMovieFetcher } from '../../../../hooks/useMovieFetcher'
 
-import { MovieRating } from '../Movie'
 import Loader from '../../../Loader'
 import NoResults from '../NoResults'
 
 import NoImage from '../NoImage'
 import styles from './index.module.scss'
+import { MovieRating } from '../MovieRating'
 
 const MovieDetail = () => {
   const { id: movieId } = useParams()
@@ -50,7 +50,8 @@ const MovieDetail = () => {
         </div>
 
         <div className={styles.movieDetail__content}>
-          <h2 className="text-4xl font-bold mb-4 pr-[150px]">{title}</h2>
+          <MovieRating rating={rating} />
+          <h2 className="text-4xl font-bold mb-4 md:pr-[150px]">{title}</h2>
           <div>
             {ratingValue !== undefined &&
               Array(10)
@@ -66,7 +67,6 @@ const MovieDetail = () => {
             <span>{genres.map(g => g.title).join(', ')}</span>
           </div>
           <p className="text-2xl">{summary}</p>
-          <MovieRating rating={rating} />
         </div>
       </div>
     </div>

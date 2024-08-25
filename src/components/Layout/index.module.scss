@@ -1,0 +1,43 @@
+.flexTwoColumn {
+    & > * {
+        width: 100%;
+    }
+
+    &--5050 {
+        @media (min-width: 768px) {
+            & > * {
+                width: 50%;
+            }
+        }
+    }
+    &--6040 {
+        @media (min-width: 768px) {
+            & > :first-child {
+                width: 60%;
+            }
+            & > :last-child {
+                width: 40%;
+            }
+        }
+    }
+    &--7030 {
+        @media (min-width: 768px) {
+            & > :first-child {
+                width: 70%;
+            }
+            & > :last-child {
+                width: 30%;
+            }
+        }
+    }
+    &--8020 {
+        @media (min-width: 768px) {
+            & > :first-child {
+                width: 80%;
+            }
+            & > :last-child {
+                width: 20%;
+            }
+        }
+    }
+}

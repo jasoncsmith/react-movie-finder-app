@@ -4,6 +4,15 @@
     padding: 16px;
 }
 
+.controls {
+    padding: 16px 0;
+    @media (min-width: 768px) {
+        .movieFinder {
+            padding: 24px 16px 0;
+        }
+    }
+}
+
 @media (min-width: 1024px) {
     .movieFinder {
         padding: 40px;

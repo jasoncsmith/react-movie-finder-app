@@ -1,0 +1,20 @@
+.movie {
+    width: 100%;
+    transition:
+        transform 0.3s ease-in-out,
+        background-color 0.3s ease-in-out;
+    &:hover {
+        text-decoration: none;
+    }
+
+    @media (min-width: 768px) {
+        &:hover {
+            transform: scale(1.05);
+        }
+        width: calc(50% - 8px);
+    }
+
+    @media (min-width: 1024px) {
+        width: calc(33.3333% - 11px);
+    }
+}

@@ -14,19 +14,24 @@ interface ResultsProps {
   isLoading: boolean
 }
 
+export const HighlightedText = ({ children }: { children: string | number }) => (
+  <strong className="text-orange-400">{children}</strong>
+)
+
 const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading }: ResultsProps) => (
   <div className={styles.movieFinder__content}>
     {!isLoading && searchTerm.length < MIN_CHAR_COUNT && movies.length === 0 && (
       <NoResults>
-        <div>
-          Search our database of <strong>{totalMovieCount ? totalMovieCount : ''}</strong> movies
-        </div>
+        Search our database of <HighlightedText>{totalMovieCount ? totalMovieCount : ''}</HighlightedText>{' '}
+        movies
       </NoResults>
     )}
 
     {!isLoading && searchTerm.length >= MIN_CHAR_COUNT && movies.length === 0 && (
       <NoResults>
-        No movies found that match <strong>{searchTerm}</strong> {selectedGenre ? `and ${selectedGenre}` : ''}
+        No movies found that match <HighlightedText>{searchTerm}</HighlightedText>{' '}
+        {selectedGenre ? `and have a genre of` : ''}{' '}
+        {selectedGenre && <HighlightedText>{selectedGenre}</HighlightedText>}
       </NoResults>
     )}
 
