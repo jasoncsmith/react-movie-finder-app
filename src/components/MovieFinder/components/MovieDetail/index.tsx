@@ -1,26 +1,19 @@
 import { useNavigate, useParams } from 'react-router-dom'
 
 import { transformDate, transformDuration } from '../../../../utils'
-import { getMovie, MovieDetail as MovieDetailProps } from '../../../../apis/movies'
+import { useMovieFetcher } from '../../../../hooks/useMovieFetcher'
 
 import { MovieRating } from '../Movie'
 import Loader from '../../../Loader'
 import NoResults from '../NoResults'
 
-import styles from './index.module.scss'
 import NoImage from '../NoImage'
-import { useQuery } from '@tanstack/react-query'
+import styles from './index.module.scss'
 
 const MovieDetail = () => {
   const { id: movieId } = useParams()
+  const { movie, isLoading } = useMovieFetcher(movieId)
   const navigate = useNavigate()
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['movie', movieId],
-    queryFn: () => getMovie(movieId),
-  })
-
-  const movie: MovieDetailProps | null | undefined = data
 
   if (isLoading) return <Loader />
 
@@ -35,6 +28,7 @@ const MovieDetail = () => {
     )
 
   const { posterUrl, summary, title, rating, ratingValue, datePublished, duration, genres } = movie
+
   return (
     <div className={styles.componentWrap}>
       <button

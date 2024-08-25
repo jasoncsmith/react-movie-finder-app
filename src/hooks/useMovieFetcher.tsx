@@ -1,10 +1,13 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getGenres, GenreModel } from '../apis/genres'
-import { getTotalNumberOfMovies, getMovies, MoviePreview } from '../apis/movies'
+import { getTotalNumberOfMovies, getMovies, MoviePreview, getMovie } from '../apis/movies'
+import { getAuth } from '../apis/auth'
 
-export const useMovieFetcher = () => {
+export const useMovieFetcher = (movieId?: string) => {
+  const token = window.localStorage.getItem('mf:authToken')
+  const [isLoadingToken, setIsLoadingToken] = useState(false)
   const location = useLocation()
   const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search])
 
@@ -20,9 +23,13 @@ export const useMovieFetcher = () => {
     queryKey: ['total-movie-count'],
     queryFn: getTotalNumberOfMovies,
   })
-  const { data: movieResponse } = useQuery({
+  const { data: movieResponse, isLoading: isLoadingMovies } = useQuery({
     queryKey: ['movies', searchParam, pageParam, genreParam],
     queryFn: () => getMovies({ search: searchParam, page: pageParam, genre: genreParam }),
+  })
+  const { data: movie, isLoading: isLoadingMovie } = useQuery({
+    queryKey: ['movie', movieId],
+    queryFn: () => getMovie(movieId),
   })
 
   const totalPages = movieResponse?.totalPages ?? 0
@@ -30,5 +37,21 @@ export const useMovieFetcher = () => {
   const movies: MoviePreview[] = movieResponse?.data ?? []
   const allGenres: GenreModel[] = genres?.data ?? []
 
-  return { totalMovieCount, totalPages, movies, allGenres, searchParam, genreParam, searchParams }
+  useEffect(() => {
+    if (token) return
+    setIsLoadingToken(true)
+    getAuth().finally(() => setIsLoadingToken(false))
+  }, [token])
+
+  return {
+    totalMovieCount,
+    totalPages,
+    movies,
+    allGenres,
+    searchParam,
+    genreParam,
+    searchParams,
+    movie,
+    isLoading: isLoadingMovie || isLoadingMovies || isLoadingToken,
+  }
 }

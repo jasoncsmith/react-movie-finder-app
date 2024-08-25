@@ -1,7 +1,6 @@
 import { ChangeEvent, ReactNode, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { getAuth } from '../../apis/auth'
 import { useMovieFetcher } from '../../hooks/useMovieFetcher'
 import { pluralize } from '../../utils'
 
@@ -15,20 +14,11 @@ import styles from './index.module.scss'
 const Controls = ({ children }: { children: ReactNode }) => <div className="grid grid-cols-2">{children}</div>
 
 const MovieFinder = () => {
-  const { totalMovieCount, totalPages, movies, allGenres, searchParam, genreParam, searchParams } =
+  const { totalMovieCount, totalPages, movies, allGenres, searchParam, genreParam, searchParams, isLoading } =
     useMovieFetcher()
   const [searchTerm, setSearchTerm] = useState('')
-  const [, setSearchParams] = useSearchParams()
-  const token = window.localStorage.getItem('mf:authToken')
-
   const [selectedGenre, setGenre] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    if (token) return
-    setIsLoading(true)
-    getAuth().finally(() => setIsLoading(false))
-  }, [token])
+  const [, setSearchParams] = useSearchParams()
 
   useEffect(() => {
     // populate controls on page load if defined in url
