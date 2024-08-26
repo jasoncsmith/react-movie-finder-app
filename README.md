@@ -24,6 +24,7 @@
 - Implement a way to debounce the search input change event, without introducing side-effects, to ensure a fast typer doesnt hit the DB unnecessarily.
 - The `useMovieFinderApiContext` had too muuch overlap with the `useMovieFetcher` and I didnt have enough time to manage their responsibility overlap. I also wasnt able to use the `setSearchParams` method from the `useSearchParams` hook in the reducer logic, so I had to keep validation logic that I wanted in the reducer, in the component. I would research to see if we could `setSearchParams` from the reducer without triggering a page reload.
 - I should have escaped user input to prevent XSS 🤦‍♂️.
+- I would have written GraphQl queries for the Contentful API.
 - Write some unit tests.
 - Allow user to select items per page.
 - I probably spent too much time on the design, but I just couldn't turn in an unstyled project 😅.
