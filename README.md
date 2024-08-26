@@ -9,8 +9,8 @@
 - Modular Sass
 - Tailwind
 
-## Hosted on Vercel
-[Click to View](https://react-movie-finder-app-delta.vercel.app/)
+### Hosted on Vercel
+[CLICK TO VISIT APP](https://react-movie-finder-app-delta.vercel.app/)
 
 ### Proud of
 
