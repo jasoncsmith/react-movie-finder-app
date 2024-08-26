@@ -9,6 +9,9 @@
 - Modular Sass
 - Tailwind
 
+## Hosted on Vercel
+[Click to View](https://react-movie-finder-app-delta.vercel.app/)
+
 ### Proud of
 
 - The `React Query` and custom hook implementation `useMovieFetcher`, to cache results. It is neat to see the delay when paginating forwards but when paginating backwards through the same result set the rendering is instant.
