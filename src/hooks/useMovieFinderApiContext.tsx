@@ -1,11 +1,12 @@
 import { createContext, Dispatch, ReactNode, Reducer, useContext, useReducer } from 'react'
 import { GenreModel } from '../apis/genres'
 import { MoviePreview } from '../apis/movies'
+import { DEFAULT_LIMIT } from '../apis/constants'
 
 enum ACTION_TYPES {
   'genre' = 'genre',
+  'search' = 'search',
   'paginate' = 'paginate',
-  'search' = 'filter',
   'recordsPerPage' = 'recordsPerPage',
 }
 
@@ -21,7 +22,7 @@ interface ActionSearch {
 
 interface ActionRecordsPerPage {
   type: typeof ACTION_TYPES.recordsPerPage
-  payload: string
+  payload: number
 }
 
 interface ActionSelectGenre {
@@ -65,7 +66,11 @@ function stateReducer(state: State, action: Action) {
   const { type, payload } = action
 
   if (type === ACTION_TYPES.paginate) {
-    // TODO: Logic for keeping page within result set here
+    // TODO: logic should go here to ensure that page range stays within result set totalPages
+    // but couldn't find a way to setSearchParams outside of a React component in time
+    // searchParams.set('page', newPage)
+    // setSearchParams(searchParams, { replace: true })
+
     return {
       ...state,
       page: payload,
@@ -75,13 +80,15 @@ function stateReducer(state: State, action: Action) {
   if (type === ACTION_TYPES.search) {
     return {
       ...state,
-      searchTerm: payload,
+      page: '1', // reset pagination when new search is entered
+      searchTerm: payload.trim(),
     }
   }
 
   if (type === ACTION_TYPES.genre) {
     return {
       ...state,
+      page: '1', // reset pagination when new genre is selected
       selectedGenre: payload,
     }
   }
@@ -96,7 +103,7 @@ function stateReducer(state: State, action: Action) {
   return state
 }
 
-const MovieFinderProvider = ({ children, defaultLimit }: MovieFinderProps) => {
+const MovieFinderProvider = ({ children, defaultLimit = DEFAULT_LIMIT }: MovieFinderProps) => {
   const [appState, dispatch] = useReducer<Reducer<State, Action>>(stateReducer, {
     ...initialState,
     limit: defaultLimit,
@@ -117,5 +124,5 @@ const useMovieFinderContext = () => {
   return state
 }
 
-export type { MovieFinderProps, ACTION_TYPES }
-export { MovieFinderProvider, useMovieFinderContext }
+export type { MovieFinderProps }
+export { MovieFinderProvider, ACTION_TYPES, useMovieFinderContext }

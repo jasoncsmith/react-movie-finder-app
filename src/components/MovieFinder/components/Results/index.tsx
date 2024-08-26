@@ -1,24 +1,21 @@
 import { MIN_CHAR_COUNT } from '../../../../apis/constants'
-import { MoviePreview } from '../../../../apis/movies'
+import { useMovieFetcher } from '../../../../hooks/useMovieFetcher'
+import { useMovieFinderContext } from '../../../../hooks/useMovieFinderApiContext'
+
 import Loader from '../../../Loader'
 import Movie from '../Movie'
 import NoResults from '../NoResults'
 
 import styles from './index.module.scss'
 
-interface ResultsProps {
-  searchTerm: string
-  selectedGenre: string
-  movies: MoviePreview[]
-  totalMovieCount: number
-  isLoading: boolean
-}
-
 export const HighlightedText = ({ children }: { children: string | number }) => (
   <strong className="text-orange-400">{children}</strong>
 )
 
-const Results = ({ searchTerm, movies, selectedGenre, totalMovieCount, isLoading }: ResultsProps) => {
+const Results = () => {
+  const { totalMovieCount, movies, isLoading } = useMovieFetcher()
+  const { selectedGenre, searchTerm } = useMovieFinderContext()
+
   const noResults = !isLoading && movies.length === 0
 
   return (

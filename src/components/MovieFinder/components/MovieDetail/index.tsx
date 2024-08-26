@@ -11,9 +11,9 @@ import { MovieImage } from '../Movie'
 import styles from './index.module.scss'
 
 const MovieDetail = () => {
+  const navigate = useNavigate()
   const { id: movieId } = useParams()
   const { movie, isLoading } = useMovieFetcher(movieId)
-  const navigate = useNavigate()
 
   if (isLoading) return <Loader />
 
@@ -31,13 +31,7 @@ const MovieDetail = () => {
 
   return (
     <div className={styles.componentWrap}>
-      <button
-        type="button"
-        onClick={() => {
-          navigate(-1)
-        }}
-        title="Back"
-      >
+      <button type="button" onClick={() => navigate(-1)} title="Back">
         Back
       </button>
 

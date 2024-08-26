@@ -1,36 +1,32 @@
-import { useLocation, useSearchParams } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
+import { ACTION_TYPES, useMovieFinderContext } from '../../../../hooks/useMovieFinderApiContext'
+import { useMovieFetcher } from '../../../../hooks/useMovieFetcher'
 import { HighlightedText } from '../Results'
 
-interface PaginationProps {
-  totalPages: number
-  numResults: number
+function keepInRange(newPage: number, totalPages: number) {
+  // TODO: this logic should go in reducer
+  return newPage < 1 ? 1 : newPage > totalPages ? totalPages : newPage
 }
 
-const Pagination = ({ totalPages }: PaginationProps) => {
+const Pagination = () => {
   const [, setSearchParams] = useSearchParams()
-  const location = useLocation()
-
-  const searchParams = new URLSearchParams(location.search)
-  const _page = searchParams.get('page') ?? '1'
-  const search = searchParams.get('search') ?? ''
-  const genre = searchParams.get('genre') ?? ''
+  const { totalPages, searchParams } = useMovieFetcher()
+  const { dispatch, page } = useMovieFinderContext()
 
   function previous() {
-    const page = _page ? +_page : 1
-    setSearchParams({ genre, search, page: page === 1 ? '1' : `${page - 1}` }, { replace: true })
+    const newPage = `${keepInRange(+page - 1, totalPages)}`
+
+    searchParams.set('page', newPage)
+    setSearchParams(searchParams, { replace: true })
+    dispatch({ type: ACTION_TYPES.paginate, payload: newPage })
   }
 
   function next() {
-    const page = _page ? +_page : 1
+    const newPage = `${keepInRange(+page + 1, totalPages)}`
 
-    setSearchParams(
-      {
-        search,
-        page: page === totalPages ? `${totalPages}` : `${page + 1}`,
-        genre,
-      },
-      { replace: true }
-    )
+    searchParams.set('page', newPage)
+    setSearchParams(searchParams, { replace: true })
+    dispatch({ type: ACTION_TYPES.paginate, payload: newPage })
   }
 
   if (totalPages <= 1) {
@@ -41,12 +37,12 @@ const Pagination = ({ totalPages }: PaginationProps) => {
     <div className="flex justify-center md:justify-end items-center">
       <div className="flex gap-5 items-center">
         <span>
-          PAGE <HighlightedText>{_page}</HighlightedText> of <strong>{totalPages}</strong>
+          PAGE <HighlightedText>{page}</HighlightedText> of <strong>{totalPages}</strong>
         </span>
-        <button type="button" onClick={previous} disabled={_page === '1'} title="Previous">
+        <button type="button" onClick={previous} disabled={+page === 1} title="Previous">
           Previous
         </button>
-        <button type="button" onClick={next} disabled={_page === `${totalPages}`} title="Next">
+        <button type="button" onClick={next} disabled={+page === totalPages} title="Next">
           Next
         </button>
       </div>
